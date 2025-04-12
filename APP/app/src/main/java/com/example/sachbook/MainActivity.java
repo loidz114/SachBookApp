@@ -46,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
 //                // Xử lý mục "Yêu thích" (nếu cần)
 //                // Ví dụ: startActivity(new Intent(MainActivity.this, FavouritesActivity.class));
 //                return true;
+            } else if (itemId == R.id.nav_history) {
+                // Chuyển sang HistoryActivity khi nhấn vào "Lịch sử"
+                Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+                startActivity(intent);
+                return true;
             } else if (itemId == R.id.nav_settings) {
                 // Xử lý mục "Cài đặt" (nếu cần)
                 // Ví dụ: startActivity(new Intent(MainActivity.this, SettingsActivity.class));
