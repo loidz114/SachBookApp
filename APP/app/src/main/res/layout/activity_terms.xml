@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center">
+
+        <!-- Tiêu đề Điều khoản -->
+        <TextView
+            android:text="Điều khoản và Chính sách bảo mật"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- Nội dung Điều khoản và Chính sách bảo mật -->
+        <TextView
+            android:text="1. Điều khoản sử dụng dịch vụ"
+            android:textSize="16sp"
+            android:lineSpacingExtra="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="   - Người dùng cần cung cấp thông tin chính xác và đầy đủ khi đăng ký tài khoản."
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="   - Người dùng phải tự bảo vệ tài khoản và thông tin đăng nhập của mình."
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="2. Quyền lợi của người dùng"
+            android:textSize="16sp"
+            android:lineSpacingExtra="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="   - Người dùng có quyền truy cập vào toàn bộ sản phẩm sách và dịch vụ được cung cấp trên ứng dụng."
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="   - Người dùng có thể tạo và quản lý danh sách yêu thích của mình."
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="   - Người dùng có quyền yêu cầu hoàn tiền hoặc hủy giao dịch trong một số trường hợp cụ thể."
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="3. Chính sách bảo mật thông tin"
+            android:textSize="16sp"
+            android:lineSpacingExtra="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="   - Chúng tôi cam kết bảo mật tất cả thông tin cá nhân của người dùng."
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="   - Thông tin người dùng sẽ không được chia sẻ với bên thứ ba mà không có sự đồng ý của người dùng, ngoại trừ khi có yêu cầu hợp pháp."
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="4. Trách nhiệm của người dùng"
+            android:textSize="16sp"
+            android:lineSpacingExtra="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="   - Người dùng chịu trách nhiệm về việc bảo vệ tài khoản của mình và không chia sẻ thông tin đăng nhập với bên thứ ba."
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="   - Người dùng không được sử dụng dịch vụ của chúng tôi vào mục đích trái phép hoặc vi phạm pháp luật."
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="5. Điều khoản thanh toán và hoàn tiền"
+            android:textSize="16sp"
+            android:lineSpacingExtra="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="   - Thanh toán sẽ được thực hiện qua các phương thức thanh toán hợp lệ trên ứng dụng."
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <TextView
+            android:text="   - Trong trường hợp xảy ra tranh chấp, chúng tôi sẽ xem xét và giải quyết theo các chính sách đã cam kết."
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"/>
+
+        <!-- Nút Đóng -->
+        <Button
+            android:id="@+id/btnClose"
+            android:text="Đóng"
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</ScrollView>

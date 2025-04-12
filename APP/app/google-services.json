@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "755503217621",
+    "project_id": "sachbook",
+    "storage_bucket": "sachbook.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755503217621:android:afddbed22dc6aea13d9b5c",
+        "android_client_info": {
+          "package_name": "com.example.sachbook"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB09rHaQjTTA1ek0mWI8BkVYGeITmm0aAM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
