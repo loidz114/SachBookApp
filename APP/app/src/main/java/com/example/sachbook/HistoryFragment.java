@@ -1,6 +1,7 @@
 package com.example.sachbook;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
-
 import Model.Order;
 
 public class HistoryFragment extends Fragment {
@@ -27,14 +27,29 @@ public class HistoryFragment extends Fragment {
 
         recyclerViewHistory = view.findViewById(R.id.recyclerViewHistory);
 
-        orderList = new ArrayList<>();
-        orderList.add(new Order("DH001", "2025-04-10", 150000));
-        orderList.add(new Order("DH002", "2025-04-11", 220000));
+        // Lấy danh sách đơn hàng từ HistoryManager
+        orderList = HistoryManager.getInstance().getOrderHistory();
+        if (orderList == null) {
+            orderList = new ArrayList<>();
+        }
 
+        // Log để kiểm tra
+        Log.d("HistoryFragment", "Số lượng đơn hàng khi tạo: " + orderList.size());
+
+        // Thiết lập RecyclerView
         recyclerViewHistory.setLayoutManager(new LinearLayoutManager(getContext()));
         historyAdapter = new HistoryAdapter(orderList);
         recyclerViewHistory.setAdapter(historyAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Cập nhật lại danh sách khi fragment được hiển thị
+        orderList = HistoryManager.getInstance().getOrderHistory();
+        Log.d("HistoryFragment", "Số lượng đơn hàng khi resume: " + orderList.size());
+        historyAdapter.updateData(orderList);
     }
 }
