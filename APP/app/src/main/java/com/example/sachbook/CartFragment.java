@@ -1,5 +1,6 @@
 package com.example.sachbook;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,8 +42,16 @@ public class CartFragment extends Fragment implements CartAdapter.UpdateTotalPri
 
         updateTotalPrice();
 
+        // Xử lý nút Thanh toán
         btnCheckout.setOnClickListener(v -> {
-            // Thêm logic thanh toán ở đây
+            // Tạo Intent để chuyển sang OrderActivity
+            Intent intent = new Intent(getActivity(), OrderActivity.class);
+            // Gửi danh sách cartItems
+            intent.putParcelableArrayListExtra("cartItems", new ArrayList<>(cartItems));
+            // Gửi tổng tiền
+            double totalPrice = calculateTotalPrice();
+            intent.putExtra("totalPrice", totalPrice);
+            startActivity(intent);
         });
 
         return view;
@@ -54,10 +63,15 @@ public class CartFragment extends Fragment implements CartAdapter.UpdateTotalPri
     }
 
     private void updateTotalPrice() {
+        double total = calculateTotalPrice();
+        tvTotalPrice.setText("Tổng tiền: " + total + " VNĐ");
+    }
+
+    private double calculateTotalPrice() {
         double total = 0;
         for (CartItem item : cartItems) {
             total += item.getPrice() * item.getQuantity();
         }
-        tvTotalPrice.setText("Tổng tiền: " + total + " VNĐ");
+        return total;
     }
 }

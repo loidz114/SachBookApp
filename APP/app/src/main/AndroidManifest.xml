@@ -13,6 +13,9 @@
         android:theme="@style/Theme.SachBook"
         tools:targetApi="31">
         <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -23,8 +26,9 @@
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
+
         <activity
-            android:name=".RegisterActivity"
+            android:name=".OrderActivity"
             android:exported="false" />
     </application>
 </manifest>

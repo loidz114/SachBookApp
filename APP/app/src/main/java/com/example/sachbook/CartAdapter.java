@@ -7,21 +7,22 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
     private List<CartItem> cartItems;
-    private final UpdateTotalPriceListener updateTotalPriceListener;
-
-    public interface UpdateTotalPriceListener {
-        void onUpdateTotalPrice();
-    }
+    private UpdateTotalPriceListener listener;
+    private boolean readOnly = false;
 
     public CartAdapter(List<CartItem> cartItems, UpdateTotalPriceListener listener) {
         this.cartItems = cartItems;
-        this.updateTotalPriceListener = listener;
+        this.listener = listener;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -34,26 +35,34 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        CartItem item = cartItems.get(position);
-        holder.tvBookTitle.setText(item.getBookTitle());
-        holder.tvPrice.setText(item.getPrice() + " VNĐ");
-        holder.tvQuantity.setText(String.valueOf(item.getQuantity()));
+        CartItem cartItem = cartItems.get(position);
+        holder.tvBookTitle.setText(cartItem.getBookTitle());
+        holder.tvPrice.setText(cartItem.getPrice() + " VNĐ");
+        holder.tvQuantity.setText(String.valueOf(cartItem.getQuantity()));
 
-        // Tăng số lượng
-        holder.btnIncrease.setOnClickListener(v -> {
-            item.setQuantity(item.getQuantity() + 1);
-            holder.tvQuantity.setText(String.valueOf(item.getQuantity()));
-            updateTotalPriceListener.onUpdateTotalPrice();
-        });
+        if (readOnly) {
+            // Ẩn các nút tăng/giảm số lượng
+            holder.btnIncrease.setVisibility(View.GONE);
+            holder.btnDecrease.setVisibility(View.GONE);
+        } else {
+            // Hiển thị các nút và xử lý sự kiện
+            holder.btnIncrease.setVisibility(View.VISIBLE);
+            holder.btnDecrease.setVisibility(View.VISIBLE);
 
-        // Giảm số lượng
-        holder.btnDecrease.setOnClickListener(v -> {
-            if (item.getQuantity() > 1) {
-                item.setQuantity(item.getQuantity() - 1);
-                holder.tvQuantity.setText(String.valueOf(item.getQuantity()));
-                updateTotalPriceListener.onUpdateTotalPrice();
-            }
-        });
+            holder.btnIncrease.setOnClickListener(v -> {
+                cartItem.setQuantity(cartItem.getQuantity() + 1);
+                holder.tvQuantity.setText(String.valueOf(cartItem.getQuantity()));
+                if (listener != null) listener.onUpdateTotalPrice();
+            });
+
+            holder.btnDecrease.setOnClickListener(v -> {
+                if (cartItem.getQuantity() > 1) {
+                    cartItem.setQuantity(cartItem.getQuantity() - 1);
+                    holder.tvQuantity.setText(String.valueOf(cartItem.getQuantity()));
+                    if (listener != null) listener.onUpdateTotalPrice();
+                }
+            });
+        }
     }
 
     @Override
@@ -73,5 +82,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             btnIncrease = itemView.findViewById(R.id.btnIncrease);
             btnDecrease = itemView.findViewById(R.id.btnDecrease);
         }
+    }
+
+    public interface UpdateTotalPriceListener {
+        void onUpdateTotalPrice();
     }
 }
