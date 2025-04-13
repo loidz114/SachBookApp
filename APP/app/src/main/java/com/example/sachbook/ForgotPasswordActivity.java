@@ -1,47 +1,62 @@
 package com.example.sachbook;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.widget.*;
-
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.auth.FirebaseAuth;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
     private EditText etEmail;
-    private Button btnSendResetEmail;
-    private FirebaseAuth mAuth;
+    private Button btnSubmit;
+    private TextView tvBackToLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgot_password); // XML mới đã sửa dùng email
+        setContentView(R.layout.activity_forgot_password);
 
-        // Ánh xạ view
+        // Ánh xạ các thành phần giao diện
         etEmail = findViewById(R.id.etEmail);
-        btnSendResetEmail = findViewById(R.id.btnSendResetEmail);
+        btnSubmit = findViewById(R.id.btnSubmit);
+        tvBackToLogin = findViewById(R.id.tvBackToLogin);
 
-        mAuth = FirebaseAuth.getInstance();
-
-        btnSendResetEmail.setOnClickListener(v -> {
+        // Xử lý sự kiện khi nhấn nút Gửi yêu cầu
+        btnSubmit.setOnClickListener(v -> {
             String email = etEmail.getText().toString().trim();
 
-            if (TextUtils.isEmpty(email)) {
+            if (email.isEmpty()) {
                 Toast.makeText(this, "Vui lòng nhập email", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            mAuth.sendPasswordResetEmail(email)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(this, "Đã gửi email đặt lại mật khẩu. Kiểm tra hộp thư đến của bạn.", Toast.LENGTH_LONG).show();
-                            finish(); // Quay lại màn hình trước, ví dụ Login
-                        } else {
-                            Toast.makeText(this, "Không thể gửi email: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            // Kiểm tra email với SharedPreferences
+            SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            String savedEmail = prefs.getString("email", "");
+            String savedPassword = prefs.getString("password", "");
+
+            if (email.equals(savedEmail)) {
+                // Hiển thị mật khẩu (giả lập gửi email)
+                Toast.makeText(this, "Mật khẩu của bạn là: " + savedPassword, Toast.LENGTH_LONG).show();
+
+                // Quay lại LoginActivity
+                Intent intent = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(this, "Email không tồn tại", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Xử lý sự kiện khi nhấn vào "Quay lại Đăng nhập"
+        tvBackToLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         });
     }
 }
