@@ -1,53 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:padding="24dp"
-    android:gravity="center">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#F3E5F5">
 
+    <!-- Tiêu đề -->
     <TextView
-        android:text="ĐĂNG NHẬP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Đăng nhập"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginBottom="24dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_gravity="center"
+        android:layout_marginBottom="24dp" />
 
+    <!-- Tên người dùng -->
     <EditText
-        android:id="@+id/etEmail"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
+        android:id="@+id/etUsername"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:hint="Tên người dùng"
+        android:padding="12dp"
+        android:background="@android:color/white"
+        android:layout_marginBottom="16dp" />
 
+    <!-- Mật khẩu -->
     <EditText
         android:id="@+id/etPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:hint="Mật khẩu"
         android:inputType="textPassword"
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:padding="12dp"
+        android:background="@android:color/white"
+        android:layout_marginBottom="16dp" />
 
-    <Button
-        android:id="@+id/btnLogin"
-        android:text="Đăng nhập"
-        android:layout_marginTop="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
+    <!-- Liên kết Quên mật khẩu -->
     <TextView
         android:id="@+id/tvForgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Quên mật khẩu?"
-        android:textColor="@android:color/holo_blue_dark"
-        android:layout_marginTop="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:textSize="14sp"
+        android:textColor="#1976D2"
+        android:layout_gravity="end"
+        android:layout_marginBottom="16dp" />
 
+    <!-- Nút Đăng nhập -->
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Đăng nhập"
+        android:backgroundTint="#673AB7"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Liên kết đến Đăng ký -->
     <TextView
-        android:id="@+id/tvGoToRegister"
-        android:text="Chưa có tài khoản? Đăng ký"
-        android:textColor="@android:color/holo_blue_dark"
-        android:layout_marginTop="16dp"
+        android:id="@+id/tvRegister"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Chưa có tài khoản? Đăng ký"
+        android:textSize="16sp"
+        android:textColor="#1976D2"
+        android:layout_gravity="center" />
+
 </LinearLayout>
