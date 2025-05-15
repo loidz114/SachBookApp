@@ -4,13 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="10dp">
-
-    <ImageView
-        android:id="@+id/categoryImage"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-         />
+    android:padding="10dp"
+    android:background="#FFFFFF">
 
     <TextView
         android:id="@+id/categoryName"
@@ -18,5 +13,7 @@
         android:layout_height="wrap_content"
         android:text="Thể loại"
         android:textSize="14sp"
-        android:gravity="center" />
+        android:gravity="center"
+        android:ellipsize="end"
+        android:maxLines="1" />
 </LinearLayout>

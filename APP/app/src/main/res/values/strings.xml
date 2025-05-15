@@ -1,3 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SachBook</string>
+    <string name="search_results_title">Kết quả tìm kiếm cho: %s</string>
+    <string name="no_search_results">No results found.</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    
+    <!-- Menu Items -->
+    <string name="menu_home">Home</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_logout">Logout</string>
+    
+    <!-- Other strings -->
+    <string name="welcome_message">Welcome to SachBook</string>
+    
+    <!-- Nav Header -->
+    <string name="nav_header_profile_image">Profile picture</string>
+    <string name="nav_header_title">User Name</string>
+    <string name="nav_header_subtitle">user@email.com</string>
 </resources>

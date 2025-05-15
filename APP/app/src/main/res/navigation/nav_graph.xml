@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <!-- HomeFragment -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.sachbook.ui.fragment.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+        <argument
+            android:name="userId"
+            app:argType="long"
+            android:defaultValue="0L"
+            app:nullable="false" />
+        <action
+            android:id="@+id/action_home_to_search"
+            app:destination="@id/searchFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false">
+            <argument
+                android:name="searchQuery"
+                app:argType="string"
+                app:nullable="true"
+                android:defaultValue="@null" />
+        </action>
+        <action
+            android:id="@+id/action_home_to_cart"
+            app:destination="@id/cartFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_home_to_order_history"
+            app:destination="@id/orderHistoryFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_home_to_account"
+            app:destination="@id/accountFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_home_to_book_detail"
+            app:destination="@id/bookDetailFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false">
+            <argument
+                android:name="bookId"
+                app:argType="long"
+                android:defaultValue="0L"
+                app:nullable="false" />
+            <argument
+                android:name="bookTitle"
+                app:argType="string"
+                app:nullable="false" />
+        </action>
+        <action
+            android:id="@+id/action_home_to_book_list"
+            app:destination="@id/bookListFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false">
+            <argument
+                android:name="categoryId"
+                android:defaultValue="0L"
+                app:argType="long" />
+            <argument
+                android:name="categoryName"
+                app:argType="string"
+                app:nullable="false" />
+        </action>
+    </fragment>
+
+    <!-- SearchFragment -->
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.sachbook.ui.fragment.SearchFragment"
+        android:label="Search"
+        tools:layout="@layout/fragment_search">
+        <argument
+            android:name="searchQuery"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_search_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_search_to_book_detail"
+            app:destination="@id/bookDetailFragment"
+            app:popUpTo="@id/searchFragment"
+            app:popUpToInclusive="false">
+            <argument
+                android:name="bookId"
+                app:argType="long"
+                android:defaultValue="0L"
+                app:nullable="false" />
+            <argument
+                android:name="bookTitle"
+                app:argType="string"
+                app:nullable="false" />
+        </action>
+        <action
+            android:id="@+id/action_search_to_cart"
+            app:destination="@id/cartFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_search_to_order_history"
+            app:destination="@id/orderHistoryFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_search_to_account"
+            app:destination="@id/accountFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <!-- CartFragment -->
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.sachbook.ui.fragment.CartFragment"
+        android:label="Cart"
+        tools:layout="@layout/fragment_cart">
+        <action
+            android:id="@+id/action_cart_to_checkout"
+            app:destination="@id/checkoutFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_cart_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_cart_to_search"
+            app:destination="@id/searchFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false">
+            <argument
+                android:name="searchQuery"
+                app:argType="string"
+                app:nullable="true"
+                android:defaultValue="@null" />
+        </action>
+        <action
+            android:id="@+id/action_cart_to_order_history"
+            app:destination="@id/orderHistoryFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_cart_to_account"
+            app:destination="@id/accountFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <!-- CheckoutFragment -->
+    <fragment
+        android:id="@+id/checkoutFragment"
+        android:name="com.example.sachbook.ui.fragment.CheckoutFragment"
+        android:label="Checkout"
+        tools:layout="@layout/fragment_checkout">
+        <action
+            android:id="@+id/action_checkout_to_order_history"
+            app:destination="@id/orderHistoryFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_checkout_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_checkout_to_cart"
+            app:destination="@id/cartFragment"
+            app:popUpTo="@id/cartFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_checkout_to_account"
+            app:destination="@id/accountFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <!-- OrderHistoryFragment -->
+    <fragment
+        android:id="@+id/orderHistoryFragment"
+        android:name="com.example.sachbook.ui.fragment.OrderHistoryFragment"
+        android:label="Order History"
+        tools:layout="@layout/fragment_order_history">
+        <action
+            android:id="@+id/action_order_history_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_order_history_to_search"
+            app:destination="@id/searchFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false">
+            <argument
+                android:name="searchQuery"
+                app:argType="string"
+                app:nullable="true"
+                android:defaultValue="@null" />
+        </action>
+        <action
+            android:id="@+id/action_order_history_to_cart"
+            app:destination="@id/cartFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_order_history_to_account"
+            app:destination="@id/accountFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_order_history_to_checkout"
+            app:destination="@id/checkoutFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_orderHistoryFragment_to_orderDetailFragment"
+            app:destination="@id/orderDetailFragment"
+            app:popUpTo="@id/orderHistoryFragment"
+            app:popUpToInclusive="false">
+            <argument
+                android:name="orderId"
+                app:argType="long"
+                android:defaultValue="0L"
+                app:nullable="false" />
+        </action>
+    </fragment>
+
+    <!-- OrderDetailFragment -->
+    <fragment
+        android:id="@+id/orderDetailFragment"
+        android:name="com.example.sachbook.ui.fragment.OrderDetailFragment"
+        android:label="Order Detail"
+        tools:layout="@layout/fragment_order_detail">
+        <argument
+            android:name="orderId"
+            app:argType="long"
+            android:defaultValue="0L"
+            app:nullable="false" />
+        <action
+            android:id="@+id/action_order_detail_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_order_detail_to_order_history"
+            app:destination="@id/orderHistoryFragment"
+            app:popUpTo="@id/orderHistoryFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_order_detail_to_cart"
+            app:destination="@id/cartFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_order_detail_to_account"
+            app:destination="@id/accountFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <!-- BookDetailFragment -->
+    <fragment
+        android:id="@+id/bookDetailFragment"
+        android:name="com.example.sachbook.ui.fragment.BookDetailFragment"
+        android:label="Book Detail"
+        tools:layout="@layout/fragment_book_detail">
+        <argument
+            android:name="bookId"
+            app:argType="long"
+            android:defaultValue="0L"
+            app:nullable="false" />
+        <argument
+            android:name="bookTitle"
+            app:argType="string"
+            app:nullable="false" />
+        <action
+            android:id="@+id/action_book_detail_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_book_detail_to_cart"
+            app:destination="@id/cartFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_book_detail_to_checkout"
+            app:destination="@id/checkoutFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <!-- BookListFragment -->
+    <fragment
+        android:id="@+id/bookListFragment"
+        android:name="com.example.sachbook.ui.fragment.BookListFragment"
+        android:label="Book List"
+        tools:layout="@layout/fragment_book_list">
+        <argument
+            android:name="categoryId"
+            app:argType="long"
+            android:defaultValue="0L"
+            app:nullable="false" />
+        <argument
+            android:name="categoryName"
+            app:argType="string"
+            app:nullable="false" />
+        <action
+            android:id="@+id/action_book_list_to_book_detail"
+            app:destination="@id/bookDetailFragment"
+            app:popUpTo="@id/bookListFragment"
+            app:popUpToInclusive="false">
+            <argument
+                android:name="bookId"
+                app:argType="long"
+                android:defaultValue="0L"
+                app:nullable="false" />
+            <argument
+                android:name="bookTitle"
+                app:argType="string"
+                app:nullable="false" />
+        </action>
+        <action
+            android:id="@+id/action_book_list_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- AccountFragment -->
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.example.sachbook.ui.fragment.AccountFragment"
+        android:label="Account"
+        tools:layout="@layout/fragment_account">
+        <action
+            android:id="@+id/action_account_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_account_to_order_history"
+            app:destination="@id/orderHistoryFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_account_to_cart"
+            app:destination="@id/cartFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_account_to_checkout"
+            app:destination="@id/checkoutFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+</navigation>

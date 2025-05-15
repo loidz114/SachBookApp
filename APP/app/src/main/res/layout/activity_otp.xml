@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:padding="24dp">
+
+    <!-- Nút Back -->
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/ripple_effect"
+        android:contentDescription="Back"
+        android:src="@drawable/arrow"
+        app:tint="@color/primary_color"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Tiêu đề -->
+    <TextView
+        android:id="@+id/otpTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Xác Nhận OTP"
+        android:textColor="@color/primary_color"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/backButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Mô tả -->
+    <TextView
+        android:id="@+id/otpDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Nhập mã OTP được gửi đến email của bạn để xác minh tài khoản"
+        android:textColor="#555555"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@id/otpTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Trường nhập OTP -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/otpInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@id/otpDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:boxStrokeColor="@color/primary_color"
+        app:boxStrokeWidth="0dp"
+        app:hintTextColor="@color/primary_color"
+        app:startIconDrawable="@drawable/ic_otp"
+        app:startIconTint="@color/primary_color">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/otpInput"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+        android:inputType="number"
+        android:imeOptions="actionDone"
+        android:maxLength="6"
+        android:textColor="#333333"
+        android:textColorHint="#999999"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:letterSpacing="0.1"
+        android:background="@drawable/input_background" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Nút xác nhận -->
+    <Button
+        android:id="@+id/verifyOtpButton"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:text="Xác Nhận"
+        android:background="@drawable/button_background"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:elevation="8dp"
+        app:layout_constraintTop_toBottomOf="@id/otpInputLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- ProgressBar -->
+    <ProgressBar
+        android:id="@+id/otpProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"
+        style="@android:style/Widget.ProgressBar.Small"
+        android:indeterminateTint="@color/primary_color"
+        app:layout_constraintTop_toBottomOf="@id/verifyOtpButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Liên kết gửi lại OTP -->
+    <TextView
+        android:id="@+id/resendOtpLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gửi lại OTP"
+        android:textColor="@color/primary_color"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:padding="12dp"
+        android:background="@drawable/ripple_effect"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/otpProgressBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
