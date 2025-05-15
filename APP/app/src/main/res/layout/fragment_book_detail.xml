@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFF8F0">
@@ -119,7 +118,7 @@
                         android:layout_height="wrap_content"
                         android:numStars="5"
                         android:stepSize="0.5"
-                        android:rating="4.5"
+                        android:rating="0"
                         android:isIndicator="true"
                         style="?android:attr/ratingBarStyleSmall"
                         app:layout_constraintTop_toBottomOf="@id/bookPrice"
@@ -158,6 +157,29 @@
                 app:layout_constraintTop_toBottomOf="@id/bookDescription"
                 app:layout_constraintStart_toStartOf="parent" />
 
+            <!-- Số lượng đánh giá -->
+            <TextView
+                android:id="@+id/reviewCountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(0)"
+                android:textSize="18sp"
+                android:textColor="#8B4513"
+                app:layout_constraintTop_toTopOf="@id/reviewTitle"
+                app:layout_constraintStart_toEndOf="@id/reviewTitle"
+                android:layout_marginStart="8dp" />
+
+            <!-- ProgressBar cho tải đánh giá -->
+            <ProgressBar
+                android:id="@+id/reviewProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/reviewTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp" />
+
             <!-- Danh sách đánh giá -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/reviewRecyclerView"
@@ -170,7 +192,24 @@
                 android:padding="8dp"
                 android:overScrollMode="never"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/reviewTitle"
+                app:layout_constraintTop_toBottomOf="@id/reviewProgressBar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Nút thêm đánh giá -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/addReviewButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Thêm đánh giá"
+                android:textSize="16sp"
+                android:padding="12dp"
+                app:cornerRadius="8dp"
+                app:backgroundTint="#2196F3"
+                android:textColor="#FFFFFF"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/reviewRecyclerView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -186,8 +225,8 @@
                 app:backgroundTint="#FF5722"
                 android:textColor="#FFFFFF"
                 android:layout_marginHorizontal="8dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@id/reviewRecyclerView"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/addReviewButton"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 

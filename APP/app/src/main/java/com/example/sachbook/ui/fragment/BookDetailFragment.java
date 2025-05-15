@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -32,30 +33,37 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sachbook.R;
 import com.example.sachbook.data.model.BookModel;
+import com.example.sachbook.data.model.ReviewModel;
+import com.example.sachbook.data.model.ReviewRequest;
+import com.example.sachbook.data.model.UserModel;
 import com.example.sachbook.data.repository.BookRepository;
 import com.example.sachbook.ui.activity.LoginActivity;
+import com.example.sachbook.ui.adapter.ReviewAdapter;
 import com.example.sachbook.ui.viewmodel.CartViewModel;
 import com.example.sachbook.ui.viewmodel.CartViewModelFactory;
 import com.google.android.material.button.MaterialButton;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BookDetailFragment extends Fragment {
+public class BookDetailFragment extends Fragment implements ReviewAdapter.OnReviewActionListener {
 
     private ImageButton backButton;
     private ImageView bookImage;
     private TextView bookTitle, bookAuthor, bookPrice, bookDescription;
     private RatingBar bookRatingBar;
     private RecyclerView reviewRecyclerView;
-    private MaterialButton addToCartButton, buyNowButton;
+    private MaterialButton addToCartButton, buyNowButton, addReviewButton;
     private BookRepository repository;
     private NavController navController;
     private CartViewModel cartViewModel;
     private long bookId;
     private String bookTitleArg;
+    private Long userId;
     private Toast currentToast;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private long lastToastTime = 0;
@@ -64,7 +72,8 @@ public class BookDetailFragment extends Fragment {
     private static final String KEY_TOKEN = "auth_token";
     private ActivityResultLauncher<Intent> loginLauncher;
     private boolean isBuyNowPending;
-    private boolean isClearCartDone; // Track clearCart completion
+    private boolean isCartCleared;
+    private ReviewAdapter reviewAdapter;
 
     @Nullable
     @Override
@@ -89,6 +98,7 @@ public class BookDetailFragment extends Fragment {
         reviewRecyclerView = view.findViewById(R.id.reviewRecyclerView);
         addToCartButton = view.findViewById(R.id.addToCartButton);
         buyNowButton = view.findViewById(R.id.buyNowButton);
+        addReviewButton = view.findViewById(R.id.addReviewButton);
 
         // Set up NavController
         navController = NavHostFragment.findNavController(this);
@@ -96,7 +106,9 @@ public class BookDetailFragment extends Fragment {
         // Restore state
         if (savedInstanceState != null) {
             isBuyNowPending = savedInstanceState.getBoolean("isBuyNowPending", false);
-            isClearCartDone = savedInstanceState.getBoolean("isClearCartDone", false);
+            isCartCleared = savedInstanceState.getBoolean("isCartCleared", false);
+            bookId = savedInstanceState.getLong("bookId", 0);
+            bookTitleArg = savedInstanceState.getString("bookTitleArg");
         }
 
         // Get arguments
@@ -112,15 +124,18 @@ public class BookDetailFragment extends Fragment {
             return view;
         }
 
-        // Set up RecyclerView for reviews (placeholder)
+        // Set up RecyclerView for reviews
         reviewRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        reviewRecyclerView.setVisibility(View.GONE); // Hide until reviews are implemented
+        reviewAdapter = new ReviewAdapter(requireContext(), userId, this);
+        reviewRecyclerView.setAdapter(reviewAdapter);
+        reviewRecyclerView.setVisibility(View.VISIBLE);
 
         // Set up ActivityResultLauncher for LoginActivity
         loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
                 String token = getToken();
                 if (token != null) {
+                    loadUserProfile(token);
                     if (isBuyNowPending) {
                         handleBuyNow(token);
                     } else {
@@ -132,6 +147,7 @@ public class BookDetailFragment extends Fragment {
             } else {
                 showToast("Đăng nhập bị hủy");
                 isBuyNowPending = false;
+                isCartCleared = false;
             }
         });
 
@@ -143,42 +159,33 @@ public class BookDetailFragment extends Fragment {
                 addToCartButton.setEnabled(false);
                 buyNowButton.setEnabled(false);
                 showToast(isBuyNowPending ? "Đang chuẩn bị thanh toán..." : "Đang thêm vào giỏ hàng...");
-
             } else if (state instanceof CartViewModel.CartState.Success) {
                 String message = ((CartViewModel.CartState.Success) state).message;
                 showToast(message);
                 if (isBuyNowPending) {
-                    if (!isClearCartDone) {
-                        // After clearCart succeeds, proceed to addToCart
-                        isClearCartDone = true;
-                        String token = getToken();
-                        if (token != null) {
+                    String token = getToken();
+                    if (token != null) {
+                        if (!isCartCleared) {
+                            // Cart cleared successfully, now add the book
+                            isCartCleared = true;
                             cartViewModel.addToCart(token, bookId, 1);
-                        }
-                    } else {
-                        // After addToCart succeeds, fetch total and navigate
-                        String token = getToken();
-                        if (token != null) {
-                            cartViewModel.getCartTotal(token, null);
+                        } else {
+                            // Book added successfully, navigate to checkout
+                            Bundle args = new Bundle();
+                            args.putBoolean("refreshTotal", true);
+                            navController.navigate(R.id.action_book_detail_to_checkout, args);
+                            isBuyNowPending = false;
+                            isCartCleared = false;
                         }
                     }
-                } else {
-                    navController.navigate(R.id.action_book_detail_to_cart);
                 }
-            } else if (state instanceof CartViewModel.CartState.TotalSuccess && isBuyNowPending) {
-                // Navigate to CheckoutFragment after total is updated
-                Bundle args = new Bundle();
-                args.putBoolean("refreshTotal", true);
-                navController.navigate(R.id.action_book_detail_to_checkout, args);
-                isBuyNowPending = false;
-                isClearCartDone = false; // Reset for next Buy Now
             } else if (state instanceof CartViewModel.CartState.Error) {
                 showToast(((CartViewModel.CartState.Error) state).message);
                 if (((CartViewModel.CartState.Error) state).message.contains("Phiên đăng nhập")) {
                     navigateToLogin();
                 }
                 isBuyNowPending = false;
-                isClearCartDone = false;
+                isCartCleared = false;
             }
         });
 
@@ -206,24 +213,46 @@ public class BookDetailFragment extends Fragment {
                 navigateToLogin();
                 return;
             }
-            // Show confirmation dialog before clearing cart
             new AlertDialog.Builder(requireContext())
                     .setTitle("Xác nhận")
-                    .setMessage("Hành động này sẽ xóa giỏ hàng hiện tại. Bạn có muốn tiếp tục?")
+                    .setMessage("Hành động này sẽ xóa giỏ hàng hiện tại và chỉ mua 1 cuốn sách này. Bạn có muốn tiếp tục?")
                     .setPositiveButton("Có", (dialog, which) -> handleBuyNow(token))
                     .setNegativeButton("Không", null)
                     .show();
         });
 
-        // Load book details
+        // Handle add review
+        addReviewButton.setOnClickListener(v -> {
+            String token = getToken();
+            if (token == null) {
+                showToast("Vui lòng đăng nhập để đánh giá");
+                navigateToLogin();
+                return;
+            }
+            if (userId == null) {
+                loadUserProfile(token);
+                showToast("Đang tải thông tin người dùng...");
+                return;
+            }
+            showReviewDialog(null);
+        });
+
+        // Load book details and reviews
         loadBookDetails();
+        loadReviews();
+
+        // Load user profile if logged in
+        String token = getToken();
+        if (token != null) {
+            loadUserProfile(token);
+        }
 
         return view;
     }
 
     private void handleBuyNow(String token) {
         isBuyNowPending = true;
-        isClearCartDone = false;
+        isCartCleared = false;
         cartViewModel.clearCart(token);
     }
 
@@ -237,13 +266,11 @@ public class BookDetailFragment extends Fragment {
                     Log.d("BookDetailFragment", "Book Response: " + book.toString());
                     bookTitle.setText(book.getTitle() != null ? book.getTitle() : "Không có tiêu đề");
                     bookAuthor.setText(book.getAuthor() != null ? "Tác giả: " + book.getAuthor() : "Không có tác giả");
-                    // Use price directly in USD
                     Double priceInUSD = book.getPrice();
                     if (priceInUSD != null && priceInUSD > 0) {
                         bookPrice.setText(String.format("$%.2f", priceInUSD));
                     } else {
                         bookPrice.setText("Price not available");
-                        Log.w("BookDetailFragment", "Price is null or 0 for bookId: " + bookId);
                     }
                     bookDescription.setText(book.getDescription() != null ? book.getDescription() : "Không có mô tả");
                     if (book.getImageUrl() != null && !book.getImageUrl().isEmpty()) {
@@ -254,7 +281,6 @@ public class BookDetailFragment extends Fragment {
                 } else {
                     showToast("Không thể tải chi tiết sách. Mã lỗi: " + response.code());
                     bookPrice.setText("Price not available");
-                    Log.e("BookDetailFragment", "Unsuccessful response: " + response.code());
                 }
             }
 
@@ -262,9 +288,180 @@ public class BookDetailFragment extends Fragment {
             public void onFailure(Call<BookModel> call, Throwable t) {
                 showToast("Lỗi mạng: " + t.getMessage());
                 bookPrice.setText("Price not available");
-                Log.e("BookDetailFragment", "Network error: " + t.getMessage());
             }
         });
+    }
+
+    private void loadUserProfile(String token) {
+        Call<UserModel> call = repository.getUserProfile(token);
+        call.enqueue(new Callback<UserModel>() {
+            @Override
+            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    userId = response.body().getId();
+                    reviewAdapter = new ReviewAdapter(requireContext(), userId, BookDetailFragment.this);
+                    reviewRecyclerView.setAdapter(reviewAdapter);
+                    loadReviews();
+                } else {
+                    showToast("Không thể tải thông tin người dùng");
+                    userId = null;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserModel> call, Throwable t) {
+                showToast("Lỗi mạng: " + t.getMessage());
+                userId = null;
+            }
+        });
+    }
+
+    private void loadReviews() {
+        Call<List<ReviewModel>> call = repository.getReviewsByBookId(bookId);
+        call.enqueue(new Callback<List<ReviewModel>>() {
+            @Override
+            public void onResponse(Call<List<ReviewModel>> call, Response<List<ReviewModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<ReviewModel> reviews = response.body();
+                    reviewAdapter.updateReviews(reviews);
+                    updateAverageRating(reviews);
+                    reviewRecyclerView.setVisibility(reviews.isEmpty() ? View.GONE : View.VISIBLE);
+                } else {
+                    showToast("Không thể tải đánh giá");
+                    reviewRecyclerView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ReviewModel>> call, Throwable t) {
+                showToast("Lỗi mạng: " + t.getMessage());
+                reviewRecyclerView.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void updateAverageRating(List<ReviewModel> reviews) {
+        if (reviews.isEmpty()) {
+            bookRatingBar.setRating(0);
+            return;
+        }
+        float averageRating = 0;
+        for (ReviewModel review : reviews) {
+            averageRating += review.getRating();
+        }
+        averageRating /= reviews.size();
+        bookRatingBar.setRating(averageRating);
+    }
+
+    private void showReviewDialog(ReviewModel existingReview) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_review, null);
+        RatingBar ratingBar = dialogView.findViewById(R.id.dialogRatingBar);
+        EditText commentEditText = dialogView.findViewById(R.id.dialogCommentEditText);
+        MaterialButton submitButton = dialogView.findViewById(R.id.dialogSubmitButton);
+
+        if (existingReview != null) {
+            ratingBar.setRating(existingReview.getRating());
+            commentEditText.setText(existingReview.getComment());
+            builder.setTitle("Sửa đánh giá");
+        } else {
+            builder.setTitle("Thêm đánh giá");
+        }
+
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        submitButton.setOnClickListener(v -> {
+            int rating = (int) ratingBar.getRating();
+            String comment = commentEditText.getText().toString().trim();
+
+            if (rating < 1) {
+                showToast("Vui lòng chọn số sao (1-5)");
+                return;
+            }
+            if (comment.isEmpty()) {
+                showToast("Vui lòng nhập bình luận");
+                return;
+            }
+
+            ReviewRequest request = new ReviewRequest(comment, rating);
+            String token = getToken();
+            if (existingReview == null) {
+                Call<ReviewModel> call = repository.createReview(token, userId, bookId, request);
+                call.enqueue(new Callback<ReviewModel>() {
+                    @Override
+                    public void onResponse(Call<ReviewModel> call, Response<ReviewModel> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            showToast("Đánh giá đã được thêm");
+                            loadReviews();
+                            dialog.dismiss();
+                        } else {
+                            showToast("Không thể thêm đánh giá. Mã lỗi: " + response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ReviewModel> call, Throwable t) {
+                        showToast("Lỗi mạng: " + t.getMessage());
+                    }
+                });
+            } else {
+                Call<ReviewModel> call = repository.updateReview(token, existingReview.getId(), request);
+                call.enqueue(new Callback<ReviewModel>() {
+                    @Override
+                    public void onResponse(Call<ReviewModel> call, Response<ReviewModel> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            showToast("Đánh giá đã được cập nhật");
+                            loadReviews();
+                            dialog.dismiss();
+                        } else {
+                            showToast("Không thể cập nhật đánh giá. Mã lỗi: " + response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ReviewModel> call, Throwable t) {
+                        showToast("Lỗi mạng: " + t.getMessage());
+                    }
+                });
+            }
+        });
+
+        dialog.show();
+    }
+
+    @Override
+    public void onEditReview(ReviewModel review) {
+        showReviewDialog(review);
+    }
+
+    @Override
+    public void onDeleteReview(ReviewModel review) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Xác nhận")
+                .setMessage("Bạn có chắc muốn xóa đánh giá này?")
+                .setPositiveButton("Có", (dialog, which) -> {
+                    String token = getToken();
+                    Call<String> call = repository.deleteReview(token, review.getId());
+                    call.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            if (response.isSuccessful()) {
+                                showToast("Đánh giá đã được xóa");
+                                loadReviews();
+                            } else {
+                                showToast("Không thể xóa đánh giá. Mã lỗi: " + response.code());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            showToast("Lỗi mạng: " + t.getMessage());
+                        }
+                    });
+                })
+                .setNegativeButton("Không", null)
+                .show();
     }
 
     private String getToken() {
@@ -298,6 +495,8 @@ public class BookDetailFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("isBuyNowPending", isBuyNowPending);
-        outState.putBoolean("isClearCartDone", isClearCartDone);
+        outState.putBoolean("isCartCleared", isCartCleared);
+        outState.putLong("bookId", bookId);
+        outState.putString("bookTitleArg", bookTitleArg);
     }
 }

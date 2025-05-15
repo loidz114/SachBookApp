@@ -16,6 +16,9 @@ import com.example.sachbook.data.model.RegisterRequest;
 import com.example.sachbook.data.model.RegisterResponse;
 import com.example.sachbook.data.model.ResetPasswordRequest;
 import com.example.sachbook.data.model.ResetPasswordResponse;
+import com.example.sachbook.data.model.ReviewModel;
+import com.example.sachbook.data.model.ReviewRequest;
+import com.example.sachbook.data.model.UserModel;
 import com.example.sachbook.data.remote.ApiClient;
 import com.example.sachbook.data.remote.BookApiService;
 import java.util.List;
@@ -37,7 +40,38 @@ public class BookRepository {
         }
         return apiService.register(request);
     }
+    public Call<ReviewModel> createReview(String token, Long userId, Long bookId, ReviewRequest request) {
+        if (token == null || userId == null || bookId == null || request == null) {
+            throw new IllegalArgumentException("Parameters cannot be null");
+        }
+        return apiService.createReview("Bearer " + token, userId, bookId, request);
+    }
 
+    public Call<List<ReviewModel>> getReviewsByBookId(Long bookId) {
+        if (bookId == null) {
+            throw new IllegalArgumentException("Book ID cannot be null");
+        }
+        return apiService.getReviewsByBookId(bookId);
+    }
+
+    public Call<ReviewModel> updateReview(String token, Long reviewId, ReviewRequest request) {
+        if (token == null || reviewId == null || request == null) {
+            throw new IllegalArgumentException("Parameters cannot be null");
+        }
+        return apiService.updateReview("Bearer " + token, reviewId, request);
+    }
+    public Call<UserModel> getUserProfile(String token) {
+        if (token == null) {
+            throw new IllegalArgumentException("Token cannot be null");
+        }
+        return apiService.getUserProfile("Bearer " + token);
+    }
+    public Call<String> deleteReview(String token, Long reviewId) {
+        if (token == null || reviewId == null) {
+            throw new IllegalArgumentException("Parameters cannot be null");
+        }
+        return apiService.deleteReview("Bearer " + token, reviewId);
+    }
     public Call<RegisterResponse> verifyOtp(RegisterRequest request, String otp) {
         if (request == null || otp == null) {
             throw new IllegalArgumentException("RegisterRequest and OTP cannot be null");
@@ -100,7 +134,7 @@ public class BookRepository {
         if (keyword == null || keyword.trim().isEmpty()) {
             throw new IllegalArgumentException("Keyword cannot be null or empty");
         }
-        return apiService.searchBooksByKeyword(keyword);
+        return apiService.searchBooksByKeyword(keyword,keyword);
     }
 
     public Call<CartModel> getCart(String token) {

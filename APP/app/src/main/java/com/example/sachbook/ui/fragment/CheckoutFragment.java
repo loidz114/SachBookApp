@@ -103,6 +103,9 @@ public class CheckoutFragment extends Fragment {
                     if (token != null) {
                         String discount = discountCodeEditText.getText().toString().trim();
                         cartViewModel.getCartTotal(token, discount.isEmpty() ? null : discount);
+                    } else {
+                        Toast.makeText(requireContext(), "Bạn hãy đăng nhập", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(requireContext(), LoginActivity.class));
                     }
                 }
             } else if (state instanceof CartViewModel.CartState.TotalSuccess) {
@@ -120,9 +123,11 @@ public class CheckoutFragment extends Fragment {
             } else if (state instanceof CartViewModel.CartState.Error) {
                 String message = ((CartViewModel.CartState.Error) state).message;
                 Log.e("CheckoutFragment", "Error: " + message);
-                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
                 if (message.contains("Phiên đăng nhập")) {
+                    Toast.makeText(requireContext(), "Bạn hãy đăng nhập", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(requireContext(), LoginActivity.class));
+                } else {
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
                 }
                 checkoutTotal.setText("$0.00");
             }
@@ -132,7 +137,7 @@ public class CheckoutFragment extends Fragment {
         confirmOrderButton.setOnClickListener(v -> {
             String token = getToken();
             if (token == null) {
-                Toast.makeText(requireContext(), "Vui lòng đăng nhập để xác nhận đơn hàng", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Bạn hãy đăng nhập", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(requireContext(), LoginActivity.class));
                 return;
             }
@@ -176,6 +181,9 @@ public class CheckoutFragment extends Fragment {
             String token = getToken();
             if (token != null) {
                 cartViewModel.getCartTotal(token, null);
+            } else {
+                Toast.makeText(requireContext(), "Bạn hãy đăng nhập", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(requireContext(), LoginActivity.class));
             }
         }
 
@@ -185,7 +193,7 @@ public class CheckoutFragment extends Fragment {
     private void loadCart() {
         String token = getToken();
         if (token == null) {
-            Toast.makeText(requireContext(), "Vui lòng đăng nhập để xem giỏ hàng", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Bạn hãy đăng nhập", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(requireContext(), LoginActivity.class));
             return;
         }
@@ -194,9 +202,12 @@ public class CheckoutFragment extends Fragment {
 
     private void applyDiscount(String discount) {
         String token = getToken();
-        if (token != null) {
-            cartViewModel.getCartTotal(token, discount.isEmpty() ? null : discount);
+        if (token == null) {
+            Toast.makeText(requireContext(), "Bạn hãy đăng nhập", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(requireContext(), LoginActivity.class));
+            return;
         }
+        cartViewModel.getCartTotal(token, discount.isEmpty() ? null : discount);
     }
 
     private String getToken() {

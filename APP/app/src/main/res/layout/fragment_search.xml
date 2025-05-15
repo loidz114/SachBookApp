@@ -110,8 +110,8 @@
     <!-- RecyclerView for Results -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/resultsCard"
-        android:layout_width="397dp"
-        android:layout_height="569dp"
+        android:layout_width="377dp"
+        android:layout_height="560dp"
         android:layout_marginHorizontal="2dp"
         android:layout_marginTop="16dp"
         app:cardBackgroundColor="#FFFFFF"

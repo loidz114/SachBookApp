@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <RatingBar
+        android:id="@+id/dialogRatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="1"
+        android:rating="0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/dialogCommentEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Nhập bình luận (1-500 ký tự)"
+        android:inputType="textMultiLine"
+        android:maxLength="500"
+        android:minLines="3"
+        android:background="@drawable/edittext_background"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/dialogRatingBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dialogSubmitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gửi"
+        android:textColor="#FFFFFF"
+        app:backgroundTint="#4CAF50"
+        app:layout_constraintTop_toBottomOf="@id/dialogCommentEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +55,13 @@ public class OrderDetailFragment extends Fragment {
         createdAtTextView = rootView.findViewById(R.id.orderDateText);
         orderItemsRecyclerView = rootView.findViewById(R.id.orderItemsRecyclerView);
         progressBar = rootView.findViewById(R.id.progressBar);
+
+        // Initialize Back Button
+        ImageButton backButton = rootView.findViewById(R.id.backButton);
+        backButton.setOnClickListener(v -> {
+            // Navigate back to OrderHistoryFragment
+            navController.navigate(R.id.action_order_detail_to_order_history);
+        });
 
         // Setup navigation
         navController = NavHostFragment.findNavController(this);

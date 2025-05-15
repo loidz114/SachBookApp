@@ -30,11 +30,13 @@ import com.example.sachbook.data.model.CategoryModel;
 import com.example.sachbook.data.repository.BookRepository;
 import com.example.sachbook.ui.adapter.BookAdapter;
 import com.example.sachbook.ui.adapter.CategoryAdapter;
+import com.example.sachbook.ui.adapter.BannerAdapter;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -56,6 +58,8 @@ public class HomeFragment extends Fragment implements CategoryAdapter.OnCategory
     private Handler handler;
     private Runnable searchRunnable;
     private TextWatcher searchTextWatcher;
+    private Runnable autoScrollRunnable;
+    private static final long AUTO_SCROLL_INTERVAL = 5000; // 5 seconds
 
     @Nullable
     @Override
@@ -205,12 +209,34 @@ public class HomeFragment extends Fragment implements CategoryAdapter.OnCategory
     }
 
     private void setupBanner() {
-        List<String> banners = new ArrayList<>();
-        banners.add("banner1");
-        banners.add("banner2");
-        banners.add("banner3");
-        // TODO: Implement BannerAdapter for ViewPager2
-        // Example: bannerViewPager.setAdapter(new BannerAdapter(banners));
+        // List of drawable resource IDs for banners
+        List<Integer> bannerResources = Arrays.asList(
+                R.drawable.banner1,
+                R.drawable.banner2,
+                R.drawable.banner3
+        );
+
+        // Set up BannerAdapter
+        BannerAdapter bannerAdapter = new BannerAdapter(requireContext(), bannerResources);
+        bannerViewPager.setAdapter(bannerAdapter);
+
+        // Start in the middle to allow infinite scrolling
+        if (!bannerResources.isEmpty()) {
+            bannerViewPager.setCurrentItem(Integer.MAX_VALUE / 2 - (Integer.MAX_VALUE / 2 % bannerResources.size()), false);
+        }
+
+        // Auto-scroll
+        autoScrollRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (bannerViewPager.getAdapter() != null && bannerViewPager.getAdapter().getItemCount() > 0) {
+                    int nextItem = bannerViewPager.getCurrentItem() + 1;
+                    bannerViewPager.setCurrentItem(nextItem, true);
+                    handler.postDelayed(this, AUTO_SCROLL_INTERVAL);
+                }
+            }
+        };
+        handler.postDelayed(autoScrollRunnable, AUTO_SCROLL_INTERVAL);
     }
 
     @Override
@@ -240,6 +266,10 @@ public class HomeFragment extends Fragment implements CategoryAdapter.OnCategory
         if (searchRunnable != null) {
             handler.removeCallbacks(searchRunnable);
         }
+        // Stop auto-scroll
+        if (autoScrollRunnable != null) {
+            handler.removeCallbacks(autoScrollRunnable);
+        }
         // Clear searchView content
         searchView.setText("");
     }
@@ -251,6 +281,10 @@ public class HomeFragment extends Fragment implements CategoryAdapter.OnCategory
         if (searchTextWatcher != null) {
             searchView.addTextChangedListener(searchTextWatcher);
         }
+        // Restart auto-scroll
+        if (autoScrollRunnable != null) {
+            handler.postDelayed(autoScrollRunnable, AUTO_SCROLL_INTERVAL);
+        }
     }
 
     @Override
@@ -259,6 +293,9 @@ public class HomeFragment extends Fragment implements CategoryAdapter.OnCategory
         // Clean up handler callbacks
         if (searchRunnable != null) {
             handler.removeCallbacks(searchRunnable);
+        }
+        if (autoScrollRunnable != null) {
+            handler.removeCallbacks(autoScrollRunnable);
         }
     }
 }

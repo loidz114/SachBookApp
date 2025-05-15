@@ -137,12 +137,14 @@
     </com.google.android.material.card.MaterialCardView>
 
     <!-- Nút Chỉnh sửa thông tin -->
+
+    <!-- Nút Đăng xuất -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/editProfileButton"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="184dp"
+        android:layout_marginTop="100dp"
         android:contentDescription="Chỉnh sửa thông tin cá nhân"
         android:text="Chỉnh sửa thông tin"
         android:textColor="#FFFFFF"
@@ -150,11 +152,10 @@
         app:backgroundTint="#8B4513"
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/userInfoCard" />
 
-    <!-- Nút Đăng xuất -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/logoutButton"
         android:layout_width="0dp"
@@ -170,9 +171,8 @@
         app:cornerRadius="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editProfileButton"
-        app:layout_constraintVertical_bias="0.452" />
+        app:layout_constraintVertical_bias="0.136" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

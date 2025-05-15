@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import com.google.android.material.textfield.TextInputEditText;
 public class LoginActivity extends AppCompatActivity {
     private TextInputEditText usernameInput, passwordInput;
     private Button loginButton;
+    private ImageButton backButton;
     private ProgressBar loginProgressBar;
     private TextView forgotPasswordText, registerLink;
     private LoginViewModel viewModel;
@@ -51,9 +53,13 @@ public class LoginActivity extends AppCompatActivity {
         usernameInput = findViewById(R.id.usernameInput);
         passwordInput = findViewById(R.id.passwordInput);
         loginButton = findViewById(R.id.loginButton);
+        backButton = findViewById(R.id.backButton);
         loginProgressBar = findViewById(R.id.loginProgressBar);
         forgotPasswordText = findViewById(R.id.forgotPasswordText);
         registerLink = findViewById(R.id.registerLink);
+
+        // Handle back button click
+        backButton.setOnClickListener(v -> navigateToMainActivity());
 
         // Observe login state
         viewModel.getLoginState().observe(this, state -> {

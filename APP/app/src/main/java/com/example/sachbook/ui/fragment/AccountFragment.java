@@ -20,6 +20,7 @@ import com.example.sachbook.data.model.UserModel;
 import com.example.sachbook.data.remote.ApiClient;
 import com.example.sachbook.data.remote.BookApiService;
 import com.example.sachbook.ui.activity.LoginActivity;
+import com.example.sachbook.ui.activity.MainActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import retrofit2.Call;
@@ -32,18 +33,17 @@ public class AccountFragment extends Fragment {
     private MaterialButton editProfileButton, logoutButton;
     private BookApiService apiService;
     private boolean isEditing = false;
-    private View rootView; // Store root view for lifecycle safety
+    private View rootView;
     private static final String PREFS_NAME = "SachBookPrefs";
     private static final String KEY_TOKEN = "auth_token";
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private static final long DEBOUNCE_DELAY = 500; // 500ms debounce
+    private static final long DEBOUNCE_DELAY = 500;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_account, container, false);
 
-        // Initialize views
         userName = rootView.findViewById(R.id.userName);
         userEmail = rootView.findViewById(R.id.userEmail);
         userPhone = rootView.findViewById(R.id.userPhone);
@@ -51,13 +51,10 @@ public class AccountFragment extends Fragment {
         editProfileButton = rootView.findViewById(R.id.editProfileButton);
         logoutButton = rootView.findViewById(R.id.logoutButton);
 
-        // Initialize ApiService
         apiService = ApiClient.getBookApiService(requireContext());
 
-        // Disable editing by default
         setFieldsEditable(false);
 
-        // Check token and load user info
         String token = getToken();
         if (token == null) {
             Toast.makeText(requireContext(), "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show();
@@ -65,23 +62,18 @@ public class AccountFragment extends Fragment {
             return rootView;
         }
 
-        // Load user information
         loadUserInfo(token);
 
-        // Handle edit profile button
         editProfileButton.setOnClickListener(v -> {
             if (!isEditing) {
-                // Enable editing
                 isEditing = true;
                 setFieldsEditable(true);
                 editProfileButton.setText("Lưu");
             } else {
-                // Save changes
                 saveProfile(token);
             }
         });
 
-        // Handle logout button
         logoutButton.setOnClickListener(v -> {
             logoutButton.setEnabled(false);
             handler.postDelayed(() -> logoutButton.setEnabled(true), DEBOUNCE_DELAY);
@@ -99,7 +91,7 @@ public class AccountFragment extends Fragment {
         userName.setEnabled(editable);
         userPhone.setEnabled(editable);
         userAddress.setEnabled(editable);
-        userEmail.setEnabled(false); // Email is not editable
+        userEmail.setEnabled(false);
     }
 
     private String getToken() {
@@ -109,7 +101,7 @@ public class AccountFragment extends Fragment {
 
     private void loadUserInfo(String token) {
         if (!isAdded()) return;
-        Toast.makeText(requireContext(), "Đang tải thông tin...", Toast.LENGTH_SHORT).show(); // Temporary loading feedback
+        Toast.makeText(requireContext(), "Đang tải thông tin...", Toast.LENGTH_SHORT).show();
         apiService.getUserProfile("Bearer " + token).enqueue(new Callback<UserModel>() {
             @Override
             public void onResponse(Call<UserModel> call, Response<UserModel> response) {
@@ -144,7 +136,6 @@ public class AccountFragment extends Fragment {
         String phone = userPhone.getText().toString().trim();
         String address = userAddress.getText().toString().trim();
 
-        // Input validation
         if (name.isEmpty()) {
             userName.setError("Họ và tên không được để trống");
             return;
@@ -158,7 +149,7 @@ public class AccountFragment extends Fragment {
             return;
         }
 
-        editProfileButton.setEnabled(false); // Disable button during request
+        editProfileButton.setEnabled(false);
         UpdateProfileRequest request = new UpdateProfileRequest(name, phone, address);
         apiService.updateProfile("Bearer " + token, request).enqueue(new Callback<Void>() {
             @Override
@@ -197,7 +188,7 @@ public class AccountFragment extends Fragment {
                 if (!isAdded()) return;
                 clearToken();
                 Toast.makeText(requireContext(), "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
-                redirectToLogin();
+                redirectToMain();
             }
 
             @Override
@@ -205,7 +196,7 @@ public class AccountFragment extends Fragment {
                 if (!isAdded()) return;
                 clearToken();
                 Toast.makeText(requireContext(), "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
-                redirectToLogin();
+                redirectToMain();
             }
         });
     }
@@ -215,6 +206,14 @@ public class AccountFragment extends Fragment {
                 .edit()
                 .remove(KEY_TOKEN)
                 .apply();
+    }
+
+    private void redirectToMain() {
+        if (!isAdded()) return;
+        Intent intent = new Intent(requireContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        requireActivity().finish();
     }
 
     private void redirectToLogin() {

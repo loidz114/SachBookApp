@@ -29,7 +29,7 @@ import com.google.android.material.button.MaterialButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartFragment extends Fragment implements com.example.sachbook.ui.adapter.CartAdapter.OnCartItemInteractionListener {
+public class CartFragment extends Fragment implements CartAdapter.OnCartItemInteractionListener {
 
     private RecyclerView cartRecyclerView;
     private TextView totalPriceText;
@@ -38,7 +38,7 @@ public class CartFragment extends Fragment implements com.example.sachbook.ui.ad
     private TextView emptyCartText;
     private CartViewModel cartViewModel;
     private NavController navController;
-    private com.example.sachbook.ui.adapter.CartAdapter cartAdapter;
+    private CartAdapter cartAdapter;
     private static final String PREFS_NAME = "SachBookPrefs";
     private static final String KEY_TOKEN = "auth_token";
 
@@ -78,16 +78,20 @@ public class CartFragment extends Fragment implements com.example.sachbook.ui.ad
                 if (items.isEmpty()) {
                     checkoutButton.setEnabled(false);
                     emptyCartText.setVisibility(View.VISIBLE);
-                    emptyCartText.setText("Your cart is empty");
+                    emptyCartText.setText("Giỏ hàng của bạn đang trống");
                 }
             } else if (state instanceof CartViewModel.CartState.TotalSuccess) {
                 double total = ((CartViewModel.CartState.TotalSuccess) state).total;
                 totalPriceText.setText(String.format("%,.0f $", total));
             } else if (state instanceof CartViewModel.CartState.Error) {
+                String message = ((CartViewModel.CartState.Error) state).message;
                 emptyCartText.setVisibility(View.VISIBLE);
-                emptyCartText.setText(((CartViewModel.CartState.Error) state).message);
-                if (((CartViewModel.CartState.Error) state).message.contains("Phiên đăng nhập")) {
-                    emptyCartText.setText("Please log in to view your cart");
+                if (message.contains("Phiên đăng nhập")) {
+                    emptyCartText.setText("Bạn hãy đăng nhập để xem giỏ hàng");
+                    Toast.makeText(requireContext(), "Bạn hãy đăng nhập", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(requireContext(), LoginActivity.class));
+                } else {
+                    emptyCartText.setText(message);
                 }
             }
         });
@@ -95,7 +99,7 @@ public class CartFragment extends Fragment implements com.example.sachbook.ui.ad
         checkoutButton.setOnClickListener(v -> {
             String token = getToken();
             if (token == null) {
-                Toast.makeText(requireContext(), "Please log in to checkout", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Bạn hãy đăng nhập", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(requireContext(), LoginActivity.class));
                 return;
             }
@@ -114,7 +118,9 @@ public class CartFragment extends Fragment implements com.example.sachbook.ui.ad
             totalPriceText.setText(String.format("%,.0f $", 0.0));
             checkoutButton.setEnabled(false);
             emptyCartText.setVisibility(View.VISIBLE);
-            emptyCartText.setText("Please log in to view your cart");
+            emptyCartText.setText("Bạn hãy đăng nhập để xem giỏ hàng");
+            Toast.makeText(requireContext(), "Bạn hãy đăng nhập", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(requireContext(), LoginActivity.class));
         } else {
             cartViewModel.getCart(token);
         }
@@ -141,7 +147,7 @@ public class CartFragment extends Fragment implements com.example.sachbook.ui.ad
     public void onIncreaseQuantity(CartItemModel item) {
         String token = getToken();
         if (token == null) {
-            Toast.makeText(requireContext(), "Please log in to update cart", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Bạn hãy đăng nhập", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(requireContext(), LoginActivity.class));
             return;
         }
@@ -152,7 +158,7 @@ public class CartFragment extends Fragment implements com.example.sachbook.ui.ad
     public void onDecreaseQuantity(CartItemModel item) {
         String token = getToken();
         if (token == null) {
-            Toast.makeText(requireContext(), "Please log in to update cart", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Bạn hãy đăng nhập", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(requireContext(), LoginActivity.class));
             return;
         }
@@ -167,7 +173,7 @@ public class CartFragment extends Fragment implements com.example.sachbook.ui.ad
     public void onDeleteItem(CartItemModel item) {
         String token = getToken();
         if (token == null) {
-            Toast.makeText(requireContext(), "Please log in to remove item from cart", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Bạn hãy đăng nhập", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(requireContext(), LoginActivity.class));
             return;
         }

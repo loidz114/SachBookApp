@@ -15,6 +15,8 @@ import com.example.sachbook.data.model.RegisterRequest;
 import com.example.sachbook.data.model.RegisterResponse;
 import com.example.sachbook.data.model.ResetPasswordRequest;
 import com.example.sachbook.data.model.ResetPasswordResponse;
+import com.example.sachbook.data.model.ReviewModel;
+import com.example.sachbook.data.model.ReviewRequest;
 import com.example.sachbook.data.model.UpdateProfileRequest;
 import com.example.sachbook.data.model.UserModel;
 
@@ -44,7 +46,29 @@ public interface BookApiService {
 
     @POST("api/auth/verify-otp-forgot")
     Call<ForgotPasswordResponse> verifyOtpForgot(@Body ResetPasswordRequest request);
+    @POST("api/reviews/user/{userId}/book/{bookId}")
+    Call<ReviewModel> createReview(
+            @Header("Authorization") String token,
+            @Path("userId") Long userId,
+            @Path("bookId") Long bookId,
+            @Body ReviewRequest request
+    );
 
+    @GET("api/reviews/book/{bookId}")
+    Call<List<ReviewModel>> getReviewsByBookId(@Path("bookId") Long bookId);
+
+    @PUT("api/reviews/{reviewId}")
+    Call<ReviewModel> updateReview(
+            @Header("Authorization") String token,
+            @Path("reviewId") Long reviewId,
+            @Body ReviewRequest request
+    );
+
+    @DELETE("api/reviews/{reviewId}")
+    Call<String> deleteReview(
+            @Header("Authorization") String token,
+            @Path("reviewId") Long reviewId
+    );
     @POST("api/auth/reset-password")
     Call<ResetPasswordResponse> resetPassword(@Body ResetPasswordRequest request);
 
@@ -64,7 +88,7 @@ public interface BookApiService {
     Call<List<CategoryModel>> getCategories();
 
     @GET("api/books/search")
-    Call<List<BookModel>> searchBooksByKeyword(@Query("q") String keyword);
+    Call<List<BookModel>> searchBooksByKeyword(@Query("title") String title, @Query("author") String author);
 
     @GET("api/cart")
     Call<CartModel> getCart(@Header("Authorization") String token);
