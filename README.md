@@ -94,7 +94,7 @@ app/src/main/
 ### Các bước cài đặt
 1. Clone repository:
 ```bash
-git clone https://github.com/your-username/sachbook.git
+git clone https://github.com/loidz114/SachBookAPI.git
 cd sachbook
 ```
 
@@ -127,14 +127,6 @@ Mọi đóng góp đều được hoan nghênh! Vui lòng:
 3. Commit thay đổi
 4. Push lên branch
 5. Tạo Pull Request
-
-## Giấy phép
-Dự án này được cấp phép theo giấy phép MIT - xem file [LICENSE](LICENSE) để biết thêm chi tiết.
-
-## Liên hệ
-- Email: [your-email@example.com]
-- GitHub: [your-github-profile]
-- LinkedIn: [your-linkedin-profile]
 
 ## Cảm ơn
 Cảm ơn bạn đã quan tâm đến dự án SackBook. Chúng tôi rất mong nhận được phản hồi và đóng góp từ cộng đồng! 
